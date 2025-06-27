@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 
 function SelectedContact({ selectedContactId, setSelectedContactId }) {
   const [contact, setContact] = useState(null);
-
   useEffect(() => {
     const fetchContact = async () => {
       const res = await fetch(
@@ -18,8 +17,50 @@ function SelectedContact({ selectedContactId, setSelectedContactId }) {
       }
     };
     fetchContact();
-  }, []);
-  return <div> </div>;
+  }, [selectedContactId]);
+  //kept redering contact before contact had data
+  if (!contact) return <div>Loading...</div>;
+
+  const address = contact.address;
+
+  return (
+    <div>
+      <table>
+        <thead>
+          <tr>
+            <th colSpan="3" className="name">
+              {contact.name}
+            </th>
+          </tr>
+        </thead>
+        <tr>
+          <td className="info">Email:</td>
+          <td>{contact.email}</td>
+        </tr>
+        <tr>
+          <td className="info">Phone:</td>
+          <td>{contact.phone}</td>
+        </tr>
+        <tr>
+          <td className="info" colSpan="2">
+            Address
+          </td>
+        </tr>
+        <tr>
+          <td colSpan="2">
+            {address.suite} {address.street}
+          </td>
+        </tr>
+        <tr>
+          <td colSpan="2">
+            {address.city}, {address.zipcode}
+          </td>
+        </tr>
+        <tbody></tbody>
+      </table>
+      <button onClick={() => setSelectedContactId(null)}>All Contacts</button>
+    </div>
+  );
 }
 
 export default SelectedContact;
